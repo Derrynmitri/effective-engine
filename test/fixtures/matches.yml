@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  white_player: one
+  black_player: one
+  status: 0
+  played_at: 2025-05-24 21:18:24
+
+two:
+  white_player: two
+  black_player: two
+  status: 0
+  played_at: 2025-05-24 21:18:24

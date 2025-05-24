@@ -111,4 +111,87 @@ RSpec.describe Player, type: :model do
       end
     end
   end
+
+  describe 'matches' do
+    let(:player1) { create(:player) }
+    let(:player2) { create(:player) }
+    let(:player3) { create(:player) }
+
+    let!(:match_as_white) { create(:match, white_player: player1, black_player: player2) }
+    let!(:match_as_black) { create(:match, white_player: player2, black_player: player1) }
+    let!(:other_match) { create(:match, white_player: player2, black_player: player3) }
+
+    it 'returns all matches where the player was white_player' do
+      expect(player1.matches).to include(match_as_white)
+    end
+
+    it 'returns all matches where the player was black_player' do
+      expect(player1.matches).to include(match_as_black)
+    end
+
+    it 'does not return matches where the player was not involved' do
+      expect(player1.matches).not_to include(other_match)
+    end
+
+    it 'returns a comprehensive list of matches the player participated in' do
+      expect(player1.matches.count).to eq(2)
+      expect(player1.matches).to match_array([ match_as_white, match_as_black ])
+    end
+  end
+
+  describe 'number_of_club_games_played' do
+    let(:player) { create(:player) }
+    let(:opponent) { create(:player) }
+
+    context 'when player has no matches' do
+      it 'returns 0' do
+        expect(player.number_of_club_games_played).to eq(0)
+      end
+    end
+
+    context 'when player has matches with different statuses' do
+      before do
+        create(:match, white_player: player, black_player: opponent, status: :completed)
+        create(:match, white_player: opponent, black_player: player, status: :completed)
+        create(:match, white_player: player, black_player: opponent, status: :pending)
+        create(:match, white_player: opponent, black_player: player, status: :cancelled)
+        create(:match, white_player: opponent, black_player: opponent, status: :completed)
+      end
+
+      it 'returns the count of completed matches by default' do
+        expect(player.number_of_club_games_played).to eq(2)
+      end
+
+      it 'returns the count of matches matching a specific status when provided' do
+        expect(player.number_of_club_games_played(game_status: :pending)).to eq(1)
+        expect(player.number_of_club_games_played(game_status: :cancelled)).to eq(1)
+      end
+
+      it 'returns the count of matches matching an array of statuses' do
+        expect(player.number_of_club_games_played(game_status: [ :cancelled, :completed ])).to eq(3)
+      end
+
+      it 'returns 0 if no matches match the specified status' do
+        expect(player.number_of_club_games_played(game_status: :in_progress)).to eq(0)
+      end
+    end
+
+    context 'when player is only white player in completed matches' do
+      before do
+        create_list(:match, 2, white_player: player, black_player: opponent, status: :completed)
+      end
+      it 'returns the correct count' do
+        expect(player.number_of_club_games_played).to eq(2)
+      end
+    end
+
+    context 'when player is only black player in completed matches' do
+      before do
+        create_list(:match, 3, white_player: opponent, black_player: player, status: :completed)
+      end
+      it 'returns the correct count' do
+        expect(player.number_of_club_games_played).to eq(3)
+      end
+    end
+  end
 end

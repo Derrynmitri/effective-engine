@@ -1,6 +1,16 @@
 class Player < ApplicationRecord
   belongs_to :user
 
+  has_many :matches_as_white,
+           class_name: "Game",
+           foreign_key: "white_player_id",
+           dependent: :restrict_with_error
+
+  has_many :matches_as_black,
+           class_name: "Game",
+           foreign_key: "black_player_id",
+           dependent: :restrict_with_error
+
   validates :name, presence: true
   validates :surname, presence: true
   validates :birthday, presence: true
@@ -11,6 +21,14 @@ class Player < ApplicationRecord
 
   def email
     user&.email
+  end
+
+  def matches
+    Match.where("white_player_id = :id OR black_player_id = :id", id: self.id)
+  end
+
+  def number_of_club_games_played(game_status: "completed")
+    matches.where(status: game_status).count
   end
 
   private
