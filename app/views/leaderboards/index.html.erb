@@ -1,0 +1,17 @@
+<nav>
+  <div>
+    <%= link_to "Club Leaderboard", root_path %>
+  </div>
+  
+  <div>
+    <% if user_signed_in? %>
+      <span class="welcome-message">Welcome, <%= current_user.email %>!</span>
+      <%= link_to "Log out", destroy_user_session_path, method: :delete, ref: "logout" %>
+    <% else %>
+      <%= link_to "Log in", new_user_session_path, ref: "login" %>
+      <%= link_to "Register", new_user_registration_path, ref: "register" %>
+    <% end %>
+  </div>
+</nav>
+<h1>Leaderboards#index</h1>
+<p>Find me in app/views/leaderboards/index.html.erb</p>
