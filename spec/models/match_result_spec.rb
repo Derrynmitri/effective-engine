@@ -40,18 +40,6 @@ RSpec.describe MatchResult, type: :model do
       expect(match_result).not_to be_valid
       expect(match_result.errors[:match]).to include("must exist")
     end
-
-    it 'is invalid without a winner' do
-      match_result.winner = nil
-      expect(match_result).not_to be_valid
-      expect(match_result.errors[:winner]).to include("must exist")
-    end
-
-    it 'is invalid without a loser' do
-      match_result.loser = nil
-      expect(match_result).not_to be_valid
-      expect(match_result.errors[:loser]).to include("must exist")
-    end
   end
 
   describe 'draw trait' do

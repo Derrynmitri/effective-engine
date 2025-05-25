@@ -1,0 +1,107 @@
+<%= form_with(model: match_result, local: true) do |form| %>
+  <% if match_result.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(match_result.errors.count, "error") %> prohibited this match_result from being saved:</h2>
+      <ul>
+        <% match_result.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <% if @matches.size == 1 %>
+    <div>
+      <%= form.label :match_id, style: "display: block" %>
+      <input type="text" value="<%= @matches.first.id %>" disabled style="width: 100%" />
+      <%= form.hidden_field :match_id, value: @matches.first.id %>
+    </div>
+  <% else %>
+    <div>
+      <%= form.label :match_id, style: "display: block" %>
+      <%= form.collection_select :match_id, @matches, :id, :id, prompt: "Select a match" %>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :draw, style: "display: block" %>
+    <%= form.check_box :draw, { id: "match_result_draw" }, true, false %>
+  </div>
+
+  <div id="winner_loser_fields" style="<%= 'display: none;' if match_result.draw? %>">
+    <div>
+      <%= form.label :winner_id, style: "display: block" %>
+      <%= form.collection_select :winner_id, @players, :id, :name, { prompt: "Select winner" }, { id: "match_result_winner_id" } %>
+    </div>
+    <div>
+      <%= form.label :loser_id, style: "display: block" %>
+      <%= form.collection_select :loser_id, @players, :id, :name, { prompt: "Select loser" }, { id: "match_result_loser_id" } %>
+    </div>
+  </div>
+
+  <div>
+    <%= form.label :played_at, 'Date/Time Played', style: "display: block" %>
+    <%= form.datetime_local_field :played_at, value: match_result.match&.played_at&.strftime('%Y-%m-%dT%H:%M'), class: 'form-control' %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+
+  <script>
+    function initializeMatchResultForm() {
+      let drawCheckbox = document.getElementById('match_result_draw');
+      let winnerLoserFields = document.getElementById('winner_loser_fields');
+      let winnerSelect = document.getElementById('match_result_winner_id');
+      let loserSelect = document.getElementById('match_result_loser_id');
+
+      if (!drawCheckbox || !winnerLoserFields || !winnerSelect || !loserSelect) {
+        console.error('Required form elements not found');
+        return;
+      }
+
+      function toggleFields() {
+        if (drawCheckbox.checked) {
+          winnerLoserFields.style.setProperty('display', 'none', 'important');
+          winnerSelect.disabled = true;
+          loserSelect.disabled = true;
+        } else {
+          winnerLoserFields.style.setProperty('display', 'block', 'important');
+          winnerSelect.disabled = false;
+          loserSelect.disabled = false;
+        }
+      }
+
+      drawCheckbox.removeEventListener('change', toggleFields);
+      drawCheckbox.addEventListener('change', toggleFields);
+      
+      // Initial call to set the correct state based on the checkbox
+      setTimeout(function() {
+        toggleFields();
+      }, 50);
+
+      let form = drawCheckbox.closest('form');
+      if (form) {
+        form.addEventListener('submit', function(e) {
+          if (!drawCheckbox.checked) {
+            winnerSelect.disabled = false;
+            loserSelect.disabled = false;
+          }
+        });
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", initializeMatchResultForm);    
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initializeMatchResultForm);
+    } else {
+      initializeMatchResultForm();
+    }
+    
+    window.addEventListener('load', function() {
+      if (document.getElementById('match_result_draw')) {
+        initializeMatchResultForm();
+      }
+    });
+  </script>
+<% end %>

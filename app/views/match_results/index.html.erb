@@ -1,0 +1,21 @@
+<p style="color: green"><%= notice %></p>
+
+<% content_for :title, "Match results" %>
+
+<h1>Match results</h1>
+
+<div id="match_results">
+  <% @match_results.each do |match_result| %>
+    <%= render match_result %>
+    <p>
+      <%= link_to "Show this match result", match_result %>
+    </p>
+  <% end %>
+</div>
+
+<% if user_signed_in? && current_user.admin? %>
+  <div id="admin_actions">
+    <h2>Admin actions</h2>
+    <%= link_to "New match result", new_match_result_path %>
+  </div>
+<% end %>

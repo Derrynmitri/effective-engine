@@ -1,0 +1,11 @@
+<% content_for :title, "New match result" %>
+
+<h1>New match result</h1>
+
+<%= render "form", match_result: @match_result %>
+
+<br>
+
+<div>
+  <%= link_to "Back to match results", match_results_path %>
+</div>

@@ -3,14 +3,12 @@ class MatchesController < ApplicationController
   before_action :set_match, only: %i[ show edit update destroy ]
   skip_before_action :authenticate_user!, only: [ :index, :show ]
 
-  after_action :verify_authorized
+  after_action :verify_authorized, except: [ :index ]
   after_action :verify_policy_scoped, only: [ :index ]
-
 
   # GET /matches or /matches.json
   def index
     @matches = policy_scope(Match)
-    authorize @matches
   end
 
   # GET /matches/1 or /matches/1.json
