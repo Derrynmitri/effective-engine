@@ -6,7 +6,7 @@
   <div>
     <% if user_signed_in? %>
       <span class="welcome-message">Welcome, <%= current_user.email %>!</span>
-      <%= link_to "Log out", destroy_user_session_path, method: :delete, ref: "logout" %>
+      <%= button_to "Log out", destroy_user_session_path, method: :delete, form: { style: "display: inline" }, ref: "logout" %>
     <% else %>
       <%= link_to "Log in", new_user_session_path, ref: "login" %>
       <%= link_to "Register", new_user_registration_path, ref: "register" %>

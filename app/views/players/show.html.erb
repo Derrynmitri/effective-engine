@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @player %>
+
+<div>
+<% if @player.user == current_user || current_user.admin? %>
+  <%= link_to "Edit this player", edit_player_path(@player) %> |
+<% end %>
+  <%= link_to "Back to players", players_path %>
+
+  <% if user_signed_in? && current_user.admin? %>
+    <%= button_to "Destroy this player", @player, method: :delete %>
+  <% end %>
+</div>
