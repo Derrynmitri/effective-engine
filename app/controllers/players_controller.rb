@@ -2,8 +2,8 @@ class PlayersController < ApplicationController
   before_action :authenticate_user!
   before_action :set_player, only: %i[ show edit update destroy ]
 
-  after_action :verify_authorized, except: [:index]
-  after_action :verify_policy_scoped, only: [:index]
+  after_action :verify_authorized, except: [ :index ]
+  after_action :verify_policy_scoped, only: [ :index ]
 
   # GET /players or /players.json
   def index
@@ -35,7 +35,7 @@ class PlayersController < ApplicationController
       @player = Player.new(player_params.merge(user_id: user.id))
     else
       @player = Player.new(player_params)
-      @player.errors.add(:base, user.errors.full_messages.join(', '))
+      @player.errors.add(:base, user.errors.full_messages.join(", "))
       respond_to do |format|
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @player.errors, status: :unprocessable_entity }

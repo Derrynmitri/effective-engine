@@ -1,0 +1,22 @@
+<div id="<%= dom_id match %>">
+  <p>
+    <strong>White player:</strong>
+    <%= match.white_player.present? ? "#{match.white_player.name} #{match.white_player.surname}" : match.white_player_id %>
+  </p>
+
+  <p>
+    <strong>Black player:</strong>
+    <%= match.black_player.present? ? "#{match.black_player.name} #{match.black_player.surname}" : match.black_player_id %>
+  </p>
+
+  <p>
+    <strong>Status:</strong>
+    <%= match.status %>
+  </p>
+
+  <p>
+    <strong>Played at:</strong>
+    <%= match.played_at %>
+  </p>
+
+</div>

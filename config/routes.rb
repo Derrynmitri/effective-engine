@@ -15,4 +15,7 @@ Rails.application.routes.draw do
   
   # Player routes
   resources :players
+
+  # Match routes
+  resources :matches
 end

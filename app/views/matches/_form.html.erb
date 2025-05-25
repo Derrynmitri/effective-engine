@@ -1,0 +1,39 @@
+<%= form_with(model: match) do |form| %>
+  <% if match.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(match.errors.count, "error") %> prohibited this match from being saved:</h2>
+
+      <ul>
+        <% match.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :white_player_id, style: "display: block" %>
+    <%= form.collection_select :white_player_id, @players, :id, ->(p) { "
+      #{p.name} #{p.surname} (#{p.ranking})" }, prompt: "Select White Player" %>
+  </div>
+
+  <div>
+    <%= form.label :black_player_id, style: "display: block" %>
+    <%= form.collection_select :black_player_id, @players, :id, ->(p) { "
+      #{p.name} #{p.surname} (#{p.ranking})" }, prompt: "Select Black Player" %>
+  </div>
+
+  <div>
+    <%= form.label :status, style: "display: block" %>
+    <%= form.select :status, Match.statuses.keys.map { |k| [k.humanize, k] } %>
+  </div>
+
+  <div>
+    <%= form.label :played_at, style: "display: block" %>
+    <%= form.datetime_field :played_at %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>
