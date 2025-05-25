@@ -8,7 +8,7 @@ class RankingUpdateService
 
   def initialize(match_result)
     raise InvalidMatchResultError, "Match result is required" unless match_result
-    
+
     @match_result = match_result
     @match = match_result.match
     validate_match_result!
