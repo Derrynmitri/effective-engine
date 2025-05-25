@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  match: one
+  winner: one
+  loser: one
+  draw: false
+
+two:
+  match: two
+  winner: two
+  loser: two
+  draw: false

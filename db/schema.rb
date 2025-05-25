@@ -10,9 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_24_191824) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_25_080204) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "match_results", force: :cascade do |t|
+    t.bigint "match_id", null: false
+    t.bigint "winner_id", null: false
+    t.bigint "loser_id", null: false
+    t.boolean "draw", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["loser_id"], name: "index_match_results_on_loser_id"
+    t.index ["match_id"], name: "index_match_results_on_match_id"
+    t.index ["winner_id"], name: "index_match_results_on_winner_id"
+  end
 
   create_table "matches", force: :cascade do |t|
     t.bigint "white_player_id", null: false
@@ -51,6 +63,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_24_191824) do
     t.index ["role"], name: "index_users_on_role"
   end
 
+  add_foreign_key "match_results", "matches"
+  add_foreign_key "match_results", "players", column: "loser_id"
+  add_foreign_key "match_results", "players", column: "winner_id"
   add_foreign_key "matches", "players", column: "black_player_id"
   add_foreign_key "matches", "players", column: "white_player_id"
   add_foreign_key "players", "users"

@@ -2,14 +2,17 @@ class Player < ApplicationRecord
   belongs_to :user
 
   has_many :matches_as_white,
-           class_name: "Game",
+           class_name: "Match",
            foreign_key: "white_player_id",
            dependent: :restrict_with_error
 
   has_many :matches_as_black,
-           class_name: "Game",
+           class_name: "Match",
            foreign_key: "black_player_id",
            dependent: :restrict_with_error
+
+  has_many :match_results_as_winner, class_name: "MatchResult", foreign_key: "winner_id", dependent: :restrict_with_error
+  has_many :match_results_as_loser, class_name: "MatchResult", foreign_key: "loser_id", dependent: :restrict_with_error
 
   validates :name, presence: true
   validates :surname, presence: true
