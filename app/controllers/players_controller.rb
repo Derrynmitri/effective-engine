@@ -1,4 +1,5 @@
 class PlayersController < ApplicationController
+  ITEMS_PER_PAGE = 10
   RECENT_MATCHES_LIMIT = 5
   before_action :authenticate_user!
   before_action :set_player, only: %i[ show edit update destroy ]
@@ -8,7 +9,7 @@ class PlayersController < ApplicationController
 
   # GET /players or /players.json
   def index
-    @players = policy_scope(Player).order(id: :asc)
+    @players = policy_scope(Player).order(id: :asc).page(params[:page]).per(ITEMS_PER_PAGE)
   end
 
   # GET /players/1 or /players/1.json

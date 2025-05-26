@@ -1,4 +1,5 @@
 class MatchResultsController < ApplicationController
+  ITEMS_PER_PAGE = 10
   before_action :set_match_result, only: %i[ show edit update destroy ]
   before_action :set_matches_and_players, only: %i[new edit create update]
 
@@ -7,7 +8,7 @@ class MatchResultsController < ApplicationController
 
   # GET /match_results or /match_results.json
   def index
-    @match_results = policy_scope(MatchResult)
+    @match_results = policy_scope(MatchResult).order(created_at: :desc).page(params[:page]).per(ITEMS_PER_PAGE)
   end
 
   # GET /match_results/1 or /match_results/1.json

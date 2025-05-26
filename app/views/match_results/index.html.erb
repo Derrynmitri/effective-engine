@@ -17,6 +17,9 @@
       <%= render match_result %>
     <% end %>
   </div>
+  <div class="w-full flex justify-center gap-2 mt-6 flex p-4">
+    <%= paginate @match_results, theme: 'tailwind' %>
+  </div>
 </div>
 
 
