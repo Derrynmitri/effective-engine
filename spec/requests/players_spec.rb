@@ -84,6 +84,13 @@ describe 'Players', type: :request do
       follow_redirect!
       expect(flash[:notice]).to eq('Player was successfully destroyed.')
     end
+
+    it 'destroys the associated user if they have the player role' do
+      expect {
+        delete player_path(player)
+      }.to change(User, :count).by(-1)
+      expect(User.exists?(player.user.id)).to be_falsey
+    end
   end
 
   describe 'DELETE /players/:id as non-admin' do

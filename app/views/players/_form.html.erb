@@ -1,9 +1,10 @@
 <%= form_with(model: player) do |form| %>
   <% if player.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(player.errors.count, "error") %> prohibited this player from being saved:</h2>
-
-      <ul>
+    <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 dark:bg-red-900/20 dark:border-red-800 dark:text-red-300">
+      <h2 class="font-semibold text-lg mb-2">
+        <%= pluralize(player.errors.count, "error") %> prohibited this player from being saved:
+      </h2>
+      <ul class="list-disc list-inside space-y-1">
         <% player.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
@@ -11,34 +12,34 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :name, style: "display: block" %>
-    <%= form.text_field :name %>
+  <div class="mb-4">
+    <%= form.label :name, class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+    <%= form.text_field :name, class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-sky-500 dark:focus:border-sky-500", placeholder: "Enter name" %>
   </div>
 
-  <div>
-    <%= form.label :surname, style: "display: block" %>
-    <%= form.text_field :surname %>
+  <div class="mb-4">
+    <%= form.label :surname, class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+    <%= form.text_field :surname, class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-sky-500 dark:focus:border-sky-500", placeholder: "Enter surname" %>
   </div>
 
-  <div>
-    <%= form.label :birthday, style: "display: block" %>
-    <%= form.date_field :birthday %>
+  <div class="mb-4">
+    <%= form.label :birthday, class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+    <%= form.date_field :birthday, class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-sky-500 dark:focus:border-sky-500" %>
   </div>
 
-  <div>
-    <%= form.label :ranking, style: "display: block" %>
-    <%= form.number_field :ranking %>
+  <div id="new_user_fields" class="mb-4 space-y-4">
+    <div>
+      <%= form.label :user_email, 'Email', class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= form.email_field :user_email, class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-sky-500 dark:focus:border-sky-500", placeholder: "user@example.com" %>
+    </div>
+    <div>
+      <%= form.label :user_password, 'Password', class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= form.password_field :user_password, class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-sky-500 dark:focus:border-sky-500", placeholder: "••••••••" %>
+    </div>
   </div>
 
-  <div id="new_user_fields">
-    <%= form.label :user_email, 'User Email', style: "display: block" %>
-    <%= form.email_field :user_email %>
-    <%= form.label :user_password, 'User Password', style: "display: block" %>
-    <%= form.password_field :user_password %>
-  </div>
-
-  <div>
-    <%= form.submit %>
+  <div class="flex justify-end items-center mt-6 space-x-6">
+    <%= form.submit class: "text-white bg-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-sky-600 dark:hover:bg-sky-700 dark:focus:ring-sky-800 cursor-pointer" %>
+    <%= link_to "Cancel", players_path, class: "px-4 py-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 focus:ring-2 focus:ring-gray-200 focus:ring-offset-2 dark:focus:ring-offset-gray-800" %>
   </div>
 <% end %>

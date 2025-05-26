@@ -24,6 +24,7 @@ class PlayersController < ApplicationController
   # GET /players/1/edit
   def edit
     authorize @player
+    @player.user_email = @player.user&.email
   end
 
   # POST /players or /players.json
@@ -72,8 +73,11 @@ class PlayersController < ApplicationController
   # DELETE /players/1 or /players/1.json
   def destroy
     authorize @player
+    user = @player.user
     @player.destroy!
-
+    if user&.role == "player"
+      user.destroy
+    end
     respond_to do |format|
       format.html { redirect_to players_path, status: :see_other, notice: "Player was successfully destroyed." }
       format.json { head :no_content }
@@ -88,6 +92,6 @@ class PlayersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def player_params
-      params.require(:player).permit(:name, :surname, :birthday, :ranking, :user_id)
+      params.require(:player).permit(:name, :surname, :birthday, :user_id, :user_email)
     end
 end

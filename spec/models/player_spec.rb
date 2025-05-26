@@ -65,11 +65,11 @@ RSpec.describe Player, type: :model do
       end
     end
 
-    context "when a ranking is not provided" do
-      it "is not valid" do
-        player = Player.new(name: "Test", surname: "Player", birthday: "1992/01/13", user: user1, ranking: nil)
-        expect(player).not_to be_valid
-        expect(player.errors[:ranking]).to include("can't be blank")
+    context "when a ranking is not provided set it as the lowest rank" do
+      it "is valid and assigns the lowest ranking" do
+        max_ranking = Player.maximum(:ranking).to_i
+        player = Player.create!(name: "Test", surname: "Player", birthday: "1992/01/13", user: user1)
+        expect(player.ranking).to eq(max_ranking + 1)
       end
     end
 

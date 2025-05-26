@@ -15,6 +15,8 @@ class Player < ApplicationRecord
   has_many :match_results_as_winner, class_name: "MatchResult", foreign_key: "winner_id", dependent: :restrict_with_error
   has_many :match_results_as_loser, class_name: "MatchResult", foreign_key: "loser_id", dependent: :restrict_with_error
 
+  before_validation :assign_lowest_ranking, on: :create
+
   validates :name, presence: true
   validates :surname, presence: true
   validates :birthday, presence: true
@@ -54,6 +56,12 @@ class Player < ApplicationRecord
   end
 
   private
+
+  def assign_lowest_ranking
+    if self.ranking.blank?
+      self.ranking = Player.maximum(:ranking).to_i + 1
+    end
+  end
 
   def birthday_must_be_in_the_past
     return if birthday.blank?
