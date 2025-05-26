@@ -8,7 +8,7 @@ class PlayerPolicy < ApplicationPolicy
   end
 
   def create?
-    user.admin?
+    user&.admin?
   end
 
   def new?
@@ -16,7 +16,7 @@ class PlayerPolicy < ApplicationPolicy
   end
 
   def update?
-    user.admin? || record.user_id == user.id
+    user&.admin? || record.user_id == user.id
   end
 
   def edit?
@@ -24,7 +24,7 @@ class PlayerPolicy < ApplicationPolicy
   end
 
   def destroy?
-    user.admin?
+    user&.admin?
   end
 
   class Scope < ApplicationPolicy::Scope

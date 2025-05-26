@@ -37,6 +37,22 @@ class Player < ApplicationRecord
     matches.where(status: game_status).count
   end
 
+  def full_name
+    "#{name} #{surname}"
+  end
+
+  def number_of_wins
+    match_results_as_winner.count
+  end
+
+  def number_of_losses
+    match_results_as_loser.count
+  end
+
+  def number_of_draws
+    MatchResult.where("winner_id IS NULL AND loser_id IS NULL AND match_id IN (?)", matches.pluck(:id)).count
+  end
+
   private
 
   def birthday_must_be_in_the_past

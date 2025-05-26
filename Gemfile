@@ -63,6 +63,8 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+  # ERB formatter for HTML
+  gem "htmlbeautifier"
 end
 
 group :test do
@@ -72,3 +74,7 @@ group :test do
   gem "rspec-rails", "~> 8.0.0"
   gem "factory_bot_rails"
 end
+
+gem "tailwindcss-ruby", "~> 4.1"
+
+gem "tailwindcss-rails", "~> 4.2"
