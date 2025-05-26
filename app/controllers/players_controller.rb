@@ -7,7 +7,7 @@ class PlayersController < ApplicationController
 
   # GET /players or /players.json
   def index
-    @players = policy_scope(Player)
+    @players = policy_scope(Player).order(id: :asc)
   end
 
   # GET /players/1 or /players/1.json
