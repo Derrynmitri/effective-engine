@@ -64,6 +64,22 @@ describe RankingUpdateService do
       }.to change { player4.reload.ranking }.from(4).to(3)
          .and change { player1.reload.ranking }.from(1).to(2)
     end
+
+    it 'moves lower-ranked winner up and keeps loser in place for two rank difference' do
+      match_result = double('MatchResult', match: match, draw?: false, winner_id: player3.id, loser_id: player1.id)
+      expect {
+        described_class.call(match_result)
+      }.to change { player3.reload.ranking }.from(3).to(2)
+        .and change { player1.reload.ranking }.by(0)
+    end
+
+    it 'swaps ranks when lower-ranked winner is adjacent to loser' do
+      match_result = double('MatchResult', match: match, draw?: false, winner_id: player2.id, loser_id: player1.id)
+      expect {
+        described_class.call(match_result)
+      }.to change { player2.reload.ranking }.from(2).to(1)
+        .and change { player1.reload.ranking }.from(1).to(2)
+    end
   end
 
   describe 'transactionality' do

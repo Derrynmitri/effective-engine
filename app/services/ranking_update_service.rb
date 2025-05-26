@@ -70,11 +70,26 @@ class RankingUpdateService
     original_winner_rank = winner.ranking
     original_loser_rank = loser.ranking
 
-    winner_improvement = calculate_rank_improvement(original_winner_rank, original_loser_rank)
-    new_winner_rank = original_winner_rank - winner_improvement
-    new_loser_rank = original_loser_rank + 1
+    rank_difference = original_winner_rank - original_loser_rank
 
-    execute_lower_ranked_win_changes(winner, loser, new_winner_rank, new_loser_rank, original_winner_rank, original_loser_rank)
+    if rank_difference == 2
+      handle_two_rank_difference(winner, original_winner_rank)
+    else
+      winner_improvement = calculate_rank_improvement(original_winner_rank, original_loser_rank)
+      new_winner_rank = original_winner_rank - winner_improvement
+      new_loser_rank = original_loser_rank + 1
+
+      execute_lower_ranked_win_changes(winner, loser, new_winner_rank, new_loser_rank, original_winner_rank, original_loser_rank)
+    end
+  end
+
+  def handle_two_rank_difference(winner, original_winner_rank)
+    new_winner_rank = original_winner_rank - 1
+
+    temp_rank = get_temp_ranking
+    winner.update!(ranking: temp_rank)
+    swap_players(winner, new_winner_rank, original_winner_rank)
+    winner.update!(ranking: new_winner_rank)
   end
 
   def execute_lower_ranked_win_changes(winner, loser, new_winner_rank, new_loser_rank, original_winner_rank, original_loser_rank)
