@@ -1,4 +1,5 @@
 class PlayersController < ApplicationController
+  RECENT_MATCHES_LIMIT = 5
   before_action :authenticate_user!
   before_action :set_player, only: %i[ show edit update destroy ]
 
@@ -13,6 +14,10 @@ class PlayersController < ApplicationController
   # GET /players/1 or /players/1.json
   def show
     authorize @player
+    @recent_matches = @player.matches
+                             .includes(:white_player, :black_player, :match_result)
+                             .order(created_at: :desc)
+                             .limit(RECENT_MATCHES_LIMIT)
   end
 
   # GET /players/new

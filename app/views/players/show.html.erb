@@ -1,14 +1,36 @@
-<p style="color: green"><%= notice %></p>
-
-<%= render @player %>
-
-<div>
-<% if @player.user == current_user || current_user.admin? %>
-  <%= link_to "Edit this player", edit_player_path(@player) %> |
-<% end %>
-  <%= link_to "Back to players", players_path %>
-
-  <% if user_signed_in? && current_user.admin? %>
-    <%= button_to "Destroy this player", @player, method: :delete %>
-  <% end %>
+<div class="w-full flex flex-col gap-6">
+  <div class="w-full flex items-center justify-between">
+    <h1 class="text-lg font-semibold flex items-center">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" width="24" height="24" class="inline-block mr-2 rtl:ml-2 fill-current text-sky-500 dark:text-sky-400">
+        <path d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304l91.4 0C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7L29.7 512C13.3 512 0 498.7 0 482.3zM609.3 512l-137.8 0c5.4-9.4 8.6-20.3 8.6-32l0-8c0-60.7-27.1-115.2-69.8-151.8c2.4-.1 4.7-.2 7.1-.2l61.4 0C567.8 320 640 392.2 640 481.3c0 17-13.8 30.7-30.7 30.7zM432 256c-31 0-59-12.6-79.3-32.9C372.4 196.5 384 163.6 384 128c0-26.8-6.6-52.1-18.3-74.3C384.3 40.1 407.2 32 432 32c61.9 0 112 50.1 112 112s-50.1 112-112 112z"/>
+      </svg>
+      <span>Player Overview</span>
+    </h1>
+    <div class="flex items-center space-x-2">
+      <% if policy(:player).edit? %>
+        <%= link_to 'Edit Player', edit_player_path, class: "px-4 py-2 border shadow-sm text-sm font-medium rounded-md text-sky-500 border-sky-600 hover:text-sky-100 hover:bg-sky-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 dark:border-sky-500 dark:hover:border-sky-600 dark:focus:ring-offset-gray-800" %>
+      <% end %>
+      <% if policy(:player).destroy? %>
+        <%= render 'shared/delete_modal',
+                delete_url: player_path(@player),
+                item_name: @player.name,
+                button_text: 'Delete Player',
+                button_class: 'px-4 py-2 border border-transparent text-white bg-red-600 dark:bg-red-700 dark:text-red-100 dark:hover:bg-red-800 hover:bg-red-700 font-medium rounded-md text-sm inline-flex items-center cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-offset-gray-800' %>
+      <% end %>
+    </div>
+  </div>
+  <p style="color: green"><%= notice %></p>
+  <div class="w-full">
+    <%= render @player %>
+  </div>
+  <div class="flex flex-col w-full p-6 bg-white rounded-lg shadow-md dark:bg-gray-800 gap-2">
+    <p class="text-lg font-semibold mb-2">Recent Matches</p>
+    <% if @recent_matches.any? %>
+      <%= render partial: 'match_summary', collection: @recent_matches, locals: { player: @player } %>
+    <% else %>
+      <p class="text-gray-500 dark:text-gray-400 italic text-center py-8">
+        No matches played yet.
+      </p>
+    <% end %>
+  </div>
 </div>

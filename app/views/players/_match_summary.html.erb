@@ -1,0 +1,16 @@
+<div class="w-full p-4 flex items-center justify-between bg-gray-100 dark:bg-gray-700 rounded-lg mb-4">
+  <div class="flex items-center">
+    <span class="h-4 w-4 rounded-full inline-block mr-2 <%= match_result_indicator_class(match_summary, player) %>"></span>
+    <p class="text-sm">
+      <% opponent = opponent_for_player(match_summary, player) %>
+      vs <%= opponent&.full_name || 'Unknown' %>
+    </p>
+  </div>
+  
+  <div class="text-sm text-gray-500 dark:text-gray-400">
+    <span class="font-semibold mr-2 <%= match_result_text_class(match_summary, player) %>">
+      <%= match_result_text(match_summary, player) %>
+    </span>
+    <%= match_summary.created_at.strftime("%B %d, %Y") %>
+  </div>
+</div>
