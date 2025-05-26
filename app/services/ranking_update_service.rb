@@ -89,7 +89,6 @@ class RankingUpdateService
     temp_rank = get_temp_ranking
     winner.update!(ranking: temp_rank)
     swap_players(winner, new_winner_rank, original_winner_rank)
-    winner.update!(ranking: new_winner_rank)
   end
 
   def execute_lower_ranked_win_changes(winner, loser, new_winner_rank, new_loser_rank, original_winner_rank, original_loser_rank)
@@ -101,7 +100,9 @@ class RankingUpdateService
 
     shift_players_down(new_winner_rank, original_winner_rank, [ winner, displaced_by_loser ].compact)
 
-    winner.update!(ranking: new_winner_rank)
+    PaperTrail.request(enabled: false) do
+      winner.update!(ranking: new_winner_rank)
+    end
   end
 
   def calculate_rank_improvement(winner_rank, loser_rank)
@@ -120,7 +121,9 @@ class RankingUpdateService
     temp_rank = get_temp_ranking
     displaced_player.update!(ranking: temp_rank)
     moving_player.update!(ranking: target_rank)
-    displaced_player.update!(ranking: original_rank)
+    PaperTrail.request(enabled: false) do
+      displaced_player.update!(ranking: original_rank)
+    end
 
     displaced_player
   end

@@ -46,6 +46,9 @@ gem "devise"
 # Use Pundit for authrorisation
 gem "pundit"
 
+# Use PaperTrail for tracking ranks
+gem "paper_trail"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"

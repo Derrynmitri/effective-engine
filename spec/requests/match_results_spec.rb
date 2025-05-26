@@ -75,11 +75,13 @@ RSpec.describe "MatchResults", type: :request do
 
   describe "PATCH /match_results/:id" do
     before { sign_in admin }
-    it "updates the match result with valid params" do
-      patch match_result_path(match_result), params: { match_result: { winner_id: black_player.id, loser_id: white_player.id, draw: false } }
-      expect(response).to redirect_to(match_result_path(match_result))
-      match_result.reload
-      expect(match_result.winner_id).to eq(black_player.id)
+    with_versioning do
+      it "updates the match result with valid params" do
+        patch match_result_path(match_result), params: { match_result: { winner_id: black_player.id, loser_id: white_player.id, draw: false } }
+        expect(response).to redirect_to(match_result_path(match_result))
+        match_result.reload
+        expect(match_result.winner_id).to eq(black_player.id)
+      end
     end
     it "renders edit on invalid params" do
       patch match_result_path(match_result), params: { match_result: { match_id: nil } }

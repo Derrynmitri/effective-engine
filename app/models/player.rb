@@ -1,5 +1,6 @@
 class Player < ApplicationRecord
   belongs_to :user
+  has_paper_trail only: [ :ranking ]
 
   has_many :matches_as_white,
            class_name: "Match",

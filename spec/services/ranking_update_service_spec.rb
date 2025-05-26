@@ -32,53 +32,57 @@ describe RankingUpdateService do
   end
 
   describe 'draw result' do
-    it 'does not change rankings for adjacent players' do
-      match = create(:match, white_player: player1, black_player: player2)
-      match_result = double('MatchResult', match: match, draw?: true)
-      expect {
-        described_class.call(match_result)
-      }.not_to change { [ player1.reload.ranking, player2.reload.ranking ] }
-    end
+    with_versioning do
+      it 'does not change rankings for adjacent players' do
+        match = create(:match, white_player: player1, black_player: player2)
+        match_result = double('MatchResult', match: match, draw?: true)
+        expect {
+          described_class.call(match_result)
+        }.not_to change { [ player1.reload.ranking, player2.reload.ranking ] }
+      end
 
-    it 'moves lower-ranked player up for non-adjacent rankings' do
-      match = create(:match, white_player: player1, black_player: player3)
-      match_result = double('MatchResult', match: match, draw?: true)
-      expect {
-        described_class.call(match_result)
-      }.to change { player3.reload.ranking }.from(3).to(2)
+      it 'moves lower-ranked player up for non-adjacent rankings' do
+        match = create(:match, white_player: player1, black_player: player3)
+        match_result = double('MatchResult', match: match, draw?: true)
+        expect {
+          described_class.call(match_result)
+        }.to change { player3.reload.ranking }.from(3).to(2)
+      end
     end
   end
 
   describe 'win/loss result' do
-    it 'does not change rankings if higher-ranked player wins' do
-      match_result = double('MatchResult', match: match, draw?: false, winner_id: player1.id, loser_id: player3.id)
-      expect {
-        described_class.call(match_result)
-      }.not_to change { [ player1.reload.ranking, player3.reload.ranking ] }
-    end
+    with_versioning do
+      it 'does not change rankings if higher-ranked player wins' do
+        match_result = double('MatchResult', match: match, draw?: false, winner_id: player1.id, loser_id: player3.id)
+        expect {
+          described_class.call(match_result)
+        }.not_to change { [ player1.reload.ranking, player3.reload.ranking ] }
+      end
 
-    it 'moves lower-ranked winner up and loser down' do
-      match_result = double('MatchResult', match: match, draw?: false, winner_id: player4.id, loser_id: player1.id)
-      expect {
-        described_class.call(match_result)
-      }.to change { player4.reload.ranking }.from(4).to(3)
-         .and change { player1.reload.ranking }.from(1).to(2)
-    end
+      it 'moves lower-ranked winner up and loser down' do
+        match_result = double('MatchResult', match: match, draw?: false, winner_id: player4.id, loser_id: player1.id)
+        expect {
+          described_class.call(match_result)
+        }.to change { player4.reload.ranking }.from(4).to(3)
+          .and change { player1.reload.ranking }.from(1).to(2)
+      end
 
-    it 'moves lower-ranked winner up and keeps loser in place for two rank difference' do
-      match_result = double('MatchResult', match: match, draw?: false, winner_id: player3.id, loser_id: player1.id)
-      expect {
-        described_class.call(match_result)
-      }.to change { player3.reload.ranking }.from(3).to(2)
-        .and change { player1.reload.ranking }.by(0)
-    end
+      it 'moves lower-ranked winner up and keeps loser in place for two rank difference' do
+        match_result = double('MatchResult', match: match, draw?: false, winner_id: player3.id, loser_id: player1.id)
+        expect {
+          described_class.call(match_result)
+        }.to change { player3.reload.ranking }.from(3).to(2)
+          .and change { player1.reload.ranking }.by(0)
+      end
 
-    it 'swaps ranks when lower-ranked winner is adjacent to loser' do
-      match_result = double('MatchResult', match: match, draw?: false, winner_id: player2.id, loser_id: player1.id)
-      expect {
-        described_class.call(match_result)
-      }.to change { player2.reload.ranking }.from(2).to(1)
-        .and change { player1.reload.ranking }.from(1).to(2)
+      it 'swaps ranks when lower-ranked winner is adjacent to loser' do
+        match_result = double('MatchResult', match: match, draw?: false, winner_id: player2.id, loser_id: player1.id)
+        expect {
+          described_class.call(match_result)
+        }.to change { player2.reload.ranking }.from(2).to(1)
+          .and change { player1.reload.ranking }.from(1).to(2)
+      end
     end
   end
 
