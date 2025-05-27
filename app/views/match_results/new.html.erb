@@ -1,11 +1,7 @@
 <% content_for :title, "New match result" %>
-
-<h1>New match result</h1>
-
-<%= render "form", match_result: @match_result %>
-
-<br>
-
-<div>
-  <%= link_to "Back to match results", match_results_path %>
+<div class="w-full flex flex-col gap-6">
+  <h1 class="font-semibold text-lg">Record a Match Result</h1>
+  <div class="w-full max-w-2xl p-6 bg-white rounded-lg shadow-md dark:bg-gray-800">
+    <%= render "form", match_result: @match_result %>
+  </div>
 </div>

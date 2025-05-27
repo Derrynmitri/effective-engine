@@ -1,107 +1,62 @@
-<%= form_with(model: match_result, local: true) do |form| %>
-  <% if match_result.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(match_result.errors.count, "error") %> prohibited this match_result from being saved:</h2>
-      <ul>
-        <% match_result.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
+<div class="w-full" data-controller="match-result">
+  <%= form_with(model: match_result, local: true) do |form| %>
+    <% if match_result.errors.any? %>
+      <div class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg" role="alert">
+        <h2 class="font-bold text-lg mb-2"><%= pluralize(match_result.errors.count, "error") %> prohibited this match_result from being saved:</h2>
+        <ul class="list-disc pl-5">
+          <% match_result.errors.each do |error| %>
+            <li><%= error.full_message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+    <div class="mb-6">
+      <% if @matches.size == 1 %>
+        <%= form.label :match_id, "Match", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+        <input type="text" value="<%= @matches.first.id %>" disabled class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400 cursor-not-allowed">
+        <%= form.hidden_field :match_id, value: @matches.first.id %>
+      <% else %>
+        <%= form.label :match_id, "Match", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+        <%= form.collection_select :match_id, @matches, :id, :id, { prompt: "Select a match" }, { class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" } %>
+      <% end %>
     </div>
-  <% end %>
-
-  <% if @matches.size == 1 %>
-    <div>
-      <%= form.label :match_id, style: "display: block" %>
-      <input type="text" value="<%= @matches.first.id %>" disabled style="width: 100%" />
-      <%= form.hidden_field :match_id, value: @matches.first.id %>
-    </div>
-  <% else %>
-    <div>
-      <%= form.label :match_id, style: "display: block" %>
-      <%= form.collection_select :match_id, @matches, :id, :id, prompt: "Select a match" %>
-    </div>
-  <% end %>
-
-  <div>
-    <%= form.label :draw, style: "display: block" %>
-    <%= form.check_box :draw, { id: "match_result_draw" }, true, false %>
-  </div>
-
-  <div id="winner_loser_fields" style="<%= 'display: none;' if match_result.draw? %>">
-    <div>
-      <%= form.label :winner_id, style: "display: block" %>
-      <%= form.collection_select :winner_id, @players, :id, :name, { prompt: "Select winner" }, { id: "match_result_winner_id" } %>
-    </div>
-    <div>
-      <%= form.label :loser_id, style: "display: block" %>
-      <%= form.collection_select :loser_id, @players, :id, :name, { prompt: "Select loser" }, { id: "match_result_loser_id" } %>
-    </div>
-  </div>
-
-  <div>
-    <%= form.label :played_at, 'Date/Time Played', style: "display: block" %>
-    <%= form.datetime_local_field :played_at, value: match_result.match&.played_at&.strftime('%Y-%m-%dT%H:%M'), class: 'form-control' %>
-  </div>
-
-  <div>
-    <%= form.submit %>
-  </div>
-
-  <script>
-    function initializeMatchResultForm() {
-      let drawCheckbox = document.getElementById('match_result_draw');
-      let winnerLoserFields = document.getElementById('winner_loser_fields');
-      let winnerSelect = document.getElementById('match_result_winner_id');
-      let loserSelect = document.getElementById('match_result_loser_id');
-
-      if (!drawCheckbox || !winnerLoserFields || !winnerSelect || !loserSelect) {
-        console.error('Required form elements not found');
-        return;
-      }
-
-      function toggleFields() {
-        if (drawCheckbox.checked) {
-          winnerLoserFields.style.setProperty('display', 'none', 'important');
-          winnerSelect.disabled = true;
-          loserSelect.disabled = true;
-        } else {
-          winnerLoserFields.style.setProperty('display', 'block', 'important');
-          winnerSelect.disabled = false;
-          loserSelect.disabled = false;
+    <div class="mb-6 flex items-center">
+      <%= form.check_box :draw, {
+          class: "w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600",
+          data: { action: "change->match-result#toggleWinnerLoserFields", match_result_target: "drawCheckbox" }
         }
-      }
-
-      drawCheckbox.removeEventListener('change', toggleFields);
-      drawCheckbox.addEventListener('change', toggleFields);
-      
-      // Initial call to set the correct state based on the checkbox
-      setTimeout(function() {
-        toggleFields();
-      }, 50);
-
-      let form = drawCheckbox.closest('form');
-      if (form) {
-        form.addEventListener('submit', function(e) {
-          if (!drawCheckbox.checked) {
-            winnerSelect.disabled = false;
-            loserSelect.disabled = false;
-          }
-        });
-      }
-    }
-
-    document.addEventListener("DOMContentLoaded", initializeMatchResultForm);    
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initializeMatchResultForm);
-    } else {
-      initializeMatchResultForm();
-    }
-    
-    window.addEventListener('load', function() {
-      if (document.getElementById('match_result_draw')) {
-        initializeMatchResultForm();
-      }
-    });
-  </script>
-<% end %>
+    %>
+      <%= form.label :draw, "Draw?", class: "ms-2 text-sm font-medium text-gray-900 dark:text-gray-300" %>
+    </div>
+    <div id="winner_loser_fields" class="mb-6" data-match-result-target="winnerLoserFields">
+      <div class="mb-6">
+        <%= form.label :winner_id, "Winner", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+        <%= form.collection_select :winner_id, 
+            @players, 
+            :id, 
+            :full_name, 
+            { prompt: "Select winner" }, 
+            { class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500", data: { match_result_target: "winnerSelect" } } %>
+      </div>
+      <div class="mb-6">
+        <%= form.label :loser_id, "Loser", class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+        <%= form.collection_select :loser_id, 
+            @players, 
+            :id, 
+            :full_name, 
+            { prompt: "Select loser" }, 
+            { class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500", data: { match_result_target: "loserSelect" } } %>
+      </div>
+    </div>
+    <div class="mb-6">
+      <%= form.label :played_at, 'Date/Time Played', class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= form.datetime_local_field :played_at, 
+          value: match_result.match&.played_at&.strftime('%Y-%m-%dT%H:%M'), 
+          class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" %>
+    </div>
+    <div class="flex justify-end items-center mt-6 space-x-6">
+      <%= form.submit class: "text-white bg-sky-500 hover:bg-sky-700 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-sky-600 dark:hover:bg-sky-700 dark:focus:ring-sky-800 cursor-pointer" %>
+      <%= link_to "Cancel", match_results_path, class: "px-4 py-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 focus:ring-2 focus:ring-gray-200 focus:ring-offset-2 dark:focus:ring-offset-gray-800" %>
+    </div>
+  <% end %>
+</div>

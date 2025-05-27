@@ -12,9 +12,9 @@ class MatchResultPolicy < ApplicationPolicy
   end
 
   def create?
-    return true if user.admin?
+    return true if user&.admin?
     match = Match.find(record.match_id)
-    match.white_player_id == user.id || match.black_player_id == user.id
+    match.white_player_id == user&.id || match.black_player_id == user&.id
   rescue ActiveRecord::RecordNotFound
     false
   end
@@ -24,11 +24,11 @@ class MatchResultPolicy < ApplicationPolicy
   end
 
   def update?
-    user.admin?
+    user&.admin?
   end
 
   def destroy?
-    user.admin?
+    user&.admin?
   end
 
   class Scope < Scope
