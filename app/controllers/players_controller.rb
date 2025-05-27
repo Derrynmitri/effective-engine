@@ -16,6 +16,7 @@ class PlayersController < ApplicationController
   def show
     authorize @player
     @recent_matches = @player.matches
+                             .where(status: :completed)
                              .includes(:white_player, :black_player, :match_result)
                              .order(created_at: :desc)
                              .limit(RECENT_MATCHES_LIMIT)

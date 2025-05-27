@@ -1,4 +1,4 @@
-<div class="w-full flex flex-col gap-6">
+<div class="w-full flex flex-col gap-2">
   <div class="w-full flex items-center justify-between">
     <h1 class="text-lg font-semibold flex items-center">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" width="24" height="24" class="inline-block mr-2 rtl:ml-2 fill-current text-sky-500 dark:text-sky-400">
@@ -7,10 +7,10 @@
       <span>Player Overview</span>
     </h1>
     <div class="flex items-center space-x-2">
-      <% if policy(:player).edit? %>
+      <% if policy(@player).edit? %>
         <%= link_to 'Edit Player', edit_player_path, class: "px-4 py-2 border shadow-sm text-sm font-medium rounded-md text-sky-500 border-sky-600 hover:text-sky-100 hover:bg-sky-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 dark:border-sky-500 dark:hover:border-sky-600 dark:focus:ring-offset-gray-800" %>
       <% end %>
-      <% if policy(:player).destroy? %>
+      <% if policy(@player).destroy? %>
         <%= render 'shared/delete_modal',
                 delete_url: player_path(@player),
                 item_name: @player.name,
@@ -23,7 +23,7 @@
   <div class="w-full">
     <%= render @player %>
   </div>
-  <div class="flex flex-col w-full p-6 bg-white rounded-lg shadow-md dark:bg-gray-800 gap-2">
+  <div class="flex flex-col w-full p-6 bg-white rounded-lg shadow-md dark:bg-gray-800 gap-2 mt-4">
     <p class="text-lg font-semibold mb-2">Recent Matches</p>
     <% if @recent_matches.any? %>
       <%= render partial: 'match_summary', collection: @recent_matches, locals: { player: @player } %>
