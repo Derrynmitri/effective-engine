@@ -1,12 +1,7 @@
-<% content_for :title, "Editing match" %>
-
-<h1>Editing match</h1>
-
-<%= render "form", match: @match %>
-
-<br>
-
-<div>
-  <%= link_to "Show this match", @match %> |
-  <%= link_to "Back to matches", matches_path %>
+<% content_for :title, "New Match" %>
+<div class="w-full flex flex-col gap-6">
+  <h1 class="font-semibold text-lg">Edit Match</h1>
+  <div class="w-full max-w-2xl p-6 bg-white rounded-lg shadow-md dark:bg-gray-800">
+    <%= render 'form', match: @match %>
+  </div>
 </div>

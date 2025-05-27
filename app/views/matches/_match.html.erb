@@ -1,22 +1,28 @@
 <div id="<%= dom_id match %>">
-  <p>
-    <strong>White player:</strong>
-    <%= match.white_player.present? ? "#{match.white_player.name} #{match.white_player.surname}" : match.white_player_id %>
-  </p>
-
-  <p>
-    <strong>Black player:</strong>
-    <%= match.black_player.present? ? "#{match.black_player.name} #{match.black_player.surname}" : match.black_player_id %>
-  </p>
-
-  <p>
-    <strong>Status:</strong>
-    <%= match.status %>
-  </p>
-
-  <p>
-    <strong>Played at:</strong>
-    <%= match.played_at %>
-  </p>
-
+  <div class="flex flex-col w-full p-6 bg-white rounded-lg shadow-md dark:bg-gray-800 gap-2">
+    <div class="flex items-start justify-between">
+      <div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
+        <span class="mr-2"><%= match.played_at.strftime("%B %d, %Y") %></span>
+        <p class="p-2 bg-gray-200 dark:bg-gray-700 rounded-md">
+          Match # <%= match.id %>
+        </p>
+      </div>
+      <% if match.match_result.blank? %>
+        <%= link_to "Record Result", new_match_result_path(match_id: match.id), class: "text-white bg-sky-500 hover:bg-sky-700 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-sky-600 dark:hover:bg-sky-700 dark:focus:ring-sky-800 cursor-pointer" %>
+      <% end %>
+    </div>
+    <div class="flex items-center justify-center space-x-6">
+      <div class="text-center p-4 rounded-lg">
+        <p class="font-semibold">
+          <%= match.white_player.full_name %>
+        </p>
+      </div>
+      <div class="text-2xl font-bold text-gray-400">VS</div>
+      <div class="text-center p-4 rounded-lg">
+        <p class="font-semibold">
+          <%= match.black_player.full_name %>
+        </p>
+      </div>
+    </div>
+  </div>
 </div>

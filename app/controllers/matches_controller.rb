@@ -1,4 +1,5 @@
 class MatchesController < ApplicationController
+  ITEMS_PER_PAGE = 10
   before_action :authenticate_user!
   before_action :set_match, only: %i[ show edit update destroy ]
   skip_before_action :authenticate_user!, only: [ :index, :show ]
@@ -8,7 +9,7 @@ class MatchesController < ApplicationController
 
   # GET /matches or /matches.json
   def index
-    @matches = policy_scope(Match)
+    @matches = policy_scope(Match).order(created_at: :desc).page(params[:page]).per(ITEMS_PER_PAGE)
   end
 
   # GET /matches/1 or /matches/1.json
@@ -19,7 +20,7 @@ class MatchesController < ApplicationController
   # GET /matches/new
   def new
     @match = Match.new
-    @players = Player.all.order(:name, :surname)
+    @match.build_match_result if policy(@match).create_match_result?
     authorize @match
   end
 
@@ -34,15 +35,15 @@ class MatchesController < ApplicationController
     @match = Match.new(match_params)
     authorize @match
 
-    respond_to do |format|
-      if @match.save
-        format.html { redirect_to @match, notice: "Match was successfully created." }
-        format.json { render :show, status: :created, location: @match }
-      else
-        authorize @match # Ensure authorization before rendering :new
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @match.errors, status: :unprocessable_entity }
-      end
+    unless current_user.admin?
+      @match.white_player = current_user.player
+    end
+
+    if @match.save
+      redirect_to @match, notice: "Match was successfully created."
+    else
+      @match.build_match_result if policy(@match).create_match_result? && !@match.match_result
+      render :new, status: :unprocessable_entity
     end
   end
 

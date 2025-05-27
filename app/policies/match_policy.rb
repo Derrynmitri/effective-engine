@@ -8,9 +8,9 @@ class MatchPolicy < ApplicationPolicy
   end
 
   def create?
-    return true if user.admin?
-    return false unless user.player? && user.player
-    record.white_player_id == user.player.id || record.black_player_id == user.player.id
+    return true if user&.admin?
+    return false unless user&.player? && user&.player
+    record.white_player_id == user&.player.id || record.black_player_id == user&.player.id
   end
 
   def new?
@@ -18,9 +18,9 @@ class MatchPolicy < ApplicationPolicy
   end
 
   def update?
-    return true if user.admin?
-    return false unless user.player? && user.player
-    record.white_player_id == user.player.id || record.black_player_id == user.player.id
+    return true if user&.admin?
+    return false unless user&.player? && user&.player
+    record.white_player_id == user&.player.id || record.black_player_id == user&.player.id
   end
 
   def edit?
@@ -28,7 +28,15 @@ class MatchPolicy < ApplicationPolicy
   end
 
   def destroy?
-    user.admin?
+    user&.admin?
+  end
+
+  def can_select_any_player?
+    user&.admin?
+  end
+
+  def create_match_result?
+    user&.admin?
   end
 
   class Scope < ApplicationPolicy::Scope

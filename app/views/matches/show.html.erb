@@ -1,10 +1,26 @@
-<p style="color: green"><%= notice %></p>
-
-<%= render @match %>
-
-<div>
-  <%= link_to "Edit this match", edit_match_path(@match) %> |
-  <%= link_to "Back to matches", matches_path %>
-
-  <%= button_to "Destroy this match", @match, method: :delete %>
+<div class="w-full flex flex-col gap-2">
+  <div class="w-full flex items-center justify-between">
+    <h1 class="text-lg font-semibold flex items-center">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" width="24" height="24" class="inline-block mr-2 rtl:ml-2 fill-current text-sky-500 dark:text-sky-400">
+        <path d="M215.5 224c29.2-18.4 48.5-50.9 48.5-88c0-57.4-46.6-104-104-104S56 78.6 56 136c0 37.1 19.4 69.6 48.5 88L96 224c-17.7 0-32 14.3-32 32c0 16.5 12.5 30 28.5 31.8L80 400l160 0L227.5 287.8c16-1.8 28.5-15.3 28.5-31.8c0-17.7-14.3-32-32-32l-8.5 0zM22.6 473.4c-4.2 4.2-6.6 10-6.6 16C16 501.9 26.1 512 38.6 512l242.7 0c12.5 0 22.6-10.1 22.6-22.6c0-6-2.4-11.8-6.6-16L256 432 64 432 22.6 473.4z"/>
+      </svg>
+      <span>Match Preview</span>
+    </h1>
+    <div class="flex items-center space-x-2">
+      <% if policy(@match).edit? %>
+        <%= link_to 'Edit Match', edit_match_path, class: "px-4 py-2 border text-sm font-medium rounded-md text-gray-500 border-gray-500 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 dark:border-gray-500 dark:hover:border-gray-600 dark:focus:ring-offset-gray-800" %>
+      <% end %>
+      <% if policy(@match).destroy? %>
+        <%= render 'shared/delete_modal',
+                delete_url: match_path(@match),
+                item_name:  "Match ##{@match.id}",
+                button_text: 'Delete Match',
+                button_class: 'px-4 py-2 border border-red-600 text-red-600 dark:border-red-700 dark:text-red-700 hover:shadow-md font-medium rounded-md text-sm inline-flex items-center cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-offset-gray-800' %>
+      <% end %>
+    </div>
+  </div>
+  <p style="color: green"><%= notice %></p>
+  <div class="w-full">
+    <%= render @match %>
+  </div>
 </div>

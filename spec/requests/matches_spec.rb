@@ -18,8 +18,8 @@ RSpec.describe "Matches", type: :request do
     it "shows a match" do
       get match_path(match)
       expect(response).to have_http_status(:ok)
-      expect(response.body).to include(white_player.name)
-      expect(response.body).to include(black_player.name)
+      expect(response.body).to include(white_player.full_name)
+      expect(response.body).to include(black_player.full_name)
     end
   end
 
@@ -52,7 +52,7 @@ RSpec.describe "Matches", type: :request do
       patch match_path(match), params: { match: { status: new_status } }
       expect(response).to redirect_to(match_path(match))
       follow_redirect!
-      expect(response.body).to include("completed")
+      expect(response.body).to include("Match was successfully updated.")
     end
   end
 
@@ -115,7 +115,7 @@ RSpec.describe "Matches", type: :request do
       patch match_path(match), params: { match: { status: :completed } }
       expect(response).to redirect_to(match_path(match))
       follow_redirect!
-      expect(response.body).to include("completed")
+      expect(response.body).to include("Match was successfully updated.")
     end
 
     it "does not allow player to update a match if they are not involved" do
