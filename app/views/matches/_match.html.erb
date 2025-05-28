@@ -8,7 +8,7 @@
         </p>
       </div>
       <% if match.match_result.blank? %>
-        <%= link_to "Record Result", new_match_result_path(match_id: match.id), class: "text-white bg-sky-500 hover:bg-sky-700 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-sky-600 dark:hover:bg-sky-700 dark:focus:ring-sky-800 cursor-pointer" %>
+        <%= link_to "Record Result", new_match_result_path(match_id: match.id), class: "text-white bg-sky-500 hover:bg-sky-600 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-sky-600 dark:hover:bg-sky-700 dark:focus:ring-sky-800 cursor-pointer" %>
       <% end %>
     </div>
     <div class="flex items-center justify-center space-x-6">
