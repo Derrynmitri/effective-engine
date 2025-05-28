@@ -1,24 +1,45 @@
-# README
+# Club Leaderboard
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+A Rails application for managing club players and matches with a leadboard and user authentication and authorization.
 
-Things you may want to cover:
+## Features
 
-* Ruby version
+- User authentication (Devise)
+- Role-based authorization (Pundit)
 
-* System dependencies
+## Requirements
 
-* Configuration
+- Ruby 3.4+
+- Rails 8.x
+- PostgreSQL
 
-* Database creation
+## Setup
 
-* Database initialization
+1. **Clone the repository:**
 
-* How to run the test suite
+   ```sh
+   git clone git@github.com:Derrynmitri/effective-engine.git club-leaderboard
+   cd club-leaderboard
+   ```
 
-* Services (job queues, cache servers, search engines, etc.)
+2. **Install dependencies:**
 
-* Deployment instructions
+   ```sh
+   bundle install
+   ```
 
-* ...
+3. **Set up the database:**
+
+   ```sh
+   bin/rails db:create
+   bin/rails db:migrate
+   bin/rails db:seed # optional: this will seed an admin user and 6 players.
+   ```
+
+4. **Start the development server:**
+
+   ```sh
+   bin/dev
+   ```
+
+   Visit http://localhost:3000 in your browser.
